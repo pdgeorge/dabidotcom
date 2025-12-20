@@ -7,7 +7,7 @@ from enum import Enum
 from pathlib import Path
 
 from fastapi import FastAPI, Request, HTTPException, Depends
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 import markdown as md
@@ -102,6 +102,34 @@ def static_conflict(slug: str) -> bool:
         (base / "index.html").is_file(),
         base.is_file(),
     ])
+
+def list_static_dabi_pages() -> list[str]:
+    root = STATIC_DIR / "dabi"
+    if not root.is_dir():
+        return []
+    items = set()
+    for path in root.rglob("*.html"):
+        rel = path.relative_to(root)
+        if rel.name == "index.html":
+            if rel.parent == Path("."):
+                continue
+            rel_path = rel.parent.as_posix()
+        else:
+            rel_path = rel.with_suffix("").as_posix()
+        items.add(rel_path)
+    return sorted(items)
+
+def find_static_dabi(path: str) -> Optional[Path]:
+    base = STATIC_DIR / "dabi" / path
+    candidates = [
+        base,
+        base.with_suffix(".html"),
+        base / "index.html",
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return None
 
 def require_api_key(request: Request):
     key = request.headers.get("X-API-Key")
@@ -268,18 +296,29 @@ def dabi_index():
     rows = cur.fetchall()
     conn.close()
 
-    list_html = "<h1>Dabi Pages</h1><ul>" + "".join(
+    static_pages = list_static_dabi_pages()
+    dynamic_html = "<h2>Dabi Made</h2><ul>" + "".join(
         f'<li><a class="link" href=\"/dabi/{r["slug"]}\">{r["title"]}</a> <small>({r["slug"]})</small></li>'
         for r in rows
     ) + "</ul>"
+    static_html = "<h2>Pd Made</h2><ul>" + "".join(
+        f'<li><a class="link" href=\"/dabi/{p}\">{p}</a></li>'
+        for p in static_pages
+    ) + "</ul>"
+    list_html = "<h1>Dabi Pages</h1>" + dynamic_html + static_html
     return HTMLResponse(page_shell(f"{SITE_NAME} Dabi Pages", list_html))
 
-@app.get("/dabi/{slug}", response_class=HTMLResponse)
-def get_page(slug: str):
-    if not valid_slug(slug):
+@app.get("/dabi/{path:path}", response_class=HTMLResponse)
+def get_page(path: str):
+    static_file = find_static_dabi(path)
+    if static_file:
+        return FileResponse(static_file)
+    if "/" in path or path.endswith(".html"):
+        return PlainTextResponse("Not found", status_code=404)
+    if not valid_slug(path):
         return PlainTextResponse("Not found", status_code=404)
     conn = db()
-    row = conn.execute("SELECT * FROM pages WHERE slug=?", (slug,)).fetchone()
+    row = conn.execute("SELECT * FROM pages WHERE slug=?", (path,)).fetchone()
     conn.close()
     if not row:
         return PlainTextResponse("Not found", status_code=404)
