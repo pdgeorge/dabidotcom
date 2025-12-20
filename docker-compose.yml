@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  pages:
+    build: .
+    container_name: dabby-pages
+    restart: unless-stopped
+    environment:
+      - PAGES_API_KEY=${PAGES_API_KEY:-abc123}
+      - DB_PATH=/data/pages.db
+      - SITE_NAME=Dabby
+    volumes:
+      - ./data:/data
+      - ./static:/app/static:ro
+    ports:
+      - "8000:8000"
