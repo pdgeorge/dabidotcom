@@ -1,15 +1,19 @@
 version: "3.8"
 services:
-  pages:
+  dabi-pages:
     build: .
-    container_name: dabby-pages
+    container_name: dabi-pages
     restart: unless-stopped
     environment:
       - PAGES_API_KEY=${PAGES_API_KEY:-abc123}
       - DB_PATH=/data/pages.db
-      - SITE_NAME=Dabby
+      - SITE_NAME=Dabi
     volumes:
       - ./data:/data
       - ./static:/app/static:ro
-    ports:
-      - "8000:8000"
+    networks:
+      - dabidotcom_net
+
+networks:
+  dabidotcom_net:
+    external: true
