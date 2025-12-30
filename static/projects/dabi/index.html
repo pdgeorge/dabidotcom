@@ -1,42 +1,133 @@
 <!doctype html>
 <html lang="en-AU">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dabi Ecosystem · Projects</title>
-    <link rel="stylesheet" href="/style.css" />
-  </head>
-  <body>
-    <header class="topbar" role="banner">
-      <div class="brand">
-        <span class="brand__logo" aria-hidden="true"></span>
-        <span class="brand__name">Michael George</span>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dabi Ecosystem · Projects</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <header class="topbar" role="banner">
+    <div class="brand">
+      <span class="brand__logo" aria-hidden="true"></span>
+      <span class="brand__name">Michael George</span>
+    </div>
+    <nav class="nav" aria-label="Primary">
+      <a href="/">Home</a>
+      <a href="/projects/dabi">Projects</a>
+      <a href="/blog/future">Blog</a>
+    </nav>
+  </header>
+
+  <main id="content" class="layout" role="main">
+    <section class="window" aria-labelledby="project-title">
+      <div class="window__titlebar">
+        <div class="window__title" id="project-title">DABI ECOSYSTEM</div>
+        <div class="window__controls" aria-hidden="true">
+          <span class="winbtn winbtn--min" title="Minimize"></span>
+          <span class="winbtn winbtn--max" title="Maximize"></span>
+          <span class="winbtn winbtn--close" title="Close"></span>
+        </div>
       </div>
-      <nav class="nav" aria-label="Primary">
-        <a href="/">Home</a>
-        <a href="/projects/dabi">Projects</a>
-        <a href="/blog/future">Blog</a>
-      </nav>
-    </header>
+      <div class="window__body">
+        <h1 id="dabi-ecosystem">Dabi Ecosystem</h1>
+        <h2 id="what-is-the-dabi-ecosystem">What is the Dabi Ecosystem?</h2>
+        <p>The Dabi Ecosystem is a modular, multi-surface automation and AI
+          interaction platform designed to operate across live streams, chat
+          platforms, and web-based surfaces. It provides a shared foundation for
+          real-time event handling, AI-driven interaction, and cross-platform
+          integration, allowing multiple independent components to behave as a
+          single cohesive system.</p>
+        <p>At the center of the ecosystem is “Dabi” - a persistent AI agent that
+          serves as the primary interface between the system and its users. Rather
+          than existing as a single application, Dabi can present itself across
+          multiple platforms, including Twitch, Discord, and standalone web
+          interfaces, adapting its behavior and communication style to the surface
+          it inhabits.</p>
+        <p>In addition to text and voice-based interaction, Dabi can also be
+          embodied visually, controlling an on-screen avatar that reflects system
+          state and provides a tangible sense of presence during live
+          interactions.</p>
+        <h2 id="why-it-exists">Why it exists</h2>
+        <p>Dabi was created as a deliberate learning project. It provided an
+          opportunity to explore LLM interaction, real-time systems, and platform
+          integration through a single evolving system. It is the largest personal
+          project I have undertaken, and its public nature introduced real
+          constraints around reliability, consistency, and clarity of design.</p>
+        <p>While the project began without a rigid upfront plan, its continued
+          development required me to regularly explain design decisions and
+          trade-offs in real time. That process surfaced assumptions, limitations,
+          and architectural pressures that would not have been visible through
+          experimentation alone.</p>
+        <h2 id="core-capabilities">Core Capabilities</h2>
+        <p>Depending on the surface it is operating on, Dabi can:</p>
+        <ul>
+          <li>Ingest events from Twitch and Discord</li>
+          <li>Receive REST API calls externally with API keys</li>
+          <li>Respond to text and speech inputs</li>
+          <li>Generate text or speech outputs</li>
+          <li>Interpret images and visual context</li>
+          <li>Perform moderation and automation actions</li>
+          <li>Invoke external tools and services</li>
+        </ul>
+        <h2 id="architecture">Architecture</h2>
+        <p>The Dabi Ecosystem was hosted on a Raspberry Pi and ran continuously
+          as a collection of multi-process Python applications. A primary process
+          was responsible for orchestrating supporting services and managing
+          inter-process communication via queues.</p>
+        <p>Core logic and decision-making initially lived in a central
+          application, while platform-specific integrations (such as Discord and
+          Twitch) were handled by dedicated processes. This approach enabled rapid
+          experimentation and isolated failures but gradually introduced tight
+          coupling between responsibilities.</p>
+        <h2 id="status---archived-phase-1-complete">Status - Archived: (Phase 1
+          complete)</h2>
+        <p>The current version of the Dabi Ecosystem is intentionally archived
+          after completing its initial exploratory phase.</p>
+        <p>Over time, the system evolved from a single interactive agent into a
+          collection of services handling real-time events, AI inference, platform
+          integrations, and presentation. While this enabled rapid
+          experimentation, it also blurred boundaries between experimentation,
+          production usage, and platform responsibilities.</p>
+        <p>At this point, continuing development would have increased complexity
+          without improving clarity. Rather than incrementally refactoring a
+          system that had reached its architectural limits, the project was paused
+          to allow for a redesign based on real-world usage and experience.</p>
+        <h2 id="technical-observations">Technical Observations</h2>
+        <ul>
+          <li>Rapid iteration is effective for uncovering unknown constraints, but
+            becomes counterproductive with enough time and complexity.
+            <ul>
+              <li>Early changes improved understanding quickly. Later changes spent
+                more time working within existing behaviour rather than learning or
+                adding new information.</li>
+            </ul>
+          </li>
+          <li>Infrastructure constraints (cost, hardware, latency) meaningfully
+            shape architecture decisions and cannot be treated as an afterthought.
+            <ul>
+              <li>Cost constraints drove the decision to run on fixed local hardware,
+                turning abstract limits into concrete design boundaries.</li>
+            </ul>
+          </li>
+          <li>Knowing when to stop building is as important as knowing how to
+            continue.
+            <ul>
+              <li>The decision to pause was driven by a decreasing rate of learning
+                rather than system failure.</li>
+            </ul>
+          </li>
+        </ul>
+        </p>
+      </div>
+    </section>
+  </main>
 
-    <main id="content" class="layout" role="main">
-      <section class="window" aria-labelledby="project-title">
-        <div class="window__titlebar">
-          <div class="window__title" id="project-title">DABI ECOSYSTEM</div>
-          <div class="window__controls" aria-hidden="true">
-            <span class="winbtn winbtn--min" title="Minimize"></span>
-            <span class="winbtn winbtn--max" title="Maximize"></span>
-            <span class="winbtn winbtn--close" title="Close"></span>
-          </div>
-        </div>
-        <div class="window__body">
-          <p class="lede">TODO: populate</p>
-        </div>
-      </section>
-    </main>
+  <footer class="footer" role="contentinfo">
+    <span class="muted">Built for clarity. No JavaScript required.</span>
+  </footer>
+</body>
 
-    <footer class="footer" role="contentinfo">
-      <span class="muted">Built for clarity. No JavaScript required.</span>
-    </footer>
-  </body>
 </html>
